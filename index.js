@@ -83,15 +83,6 @@ const render = () => {
   }
   html += "</center>"
 
-  if(game.board) {
-    html += `<div class="bl">`
-    html += `<div class="button" onclick="ac();newGame()">New Game</div>`
-    html += `<div class="button" onclick="ac();addPlayer()">Add</div>`
-    html += `<div class="button" onclick="ac();removePlayer()">Remove</div>`
-    html += `<div class="button" onclick="ac();hardReset()">Hard Reset</div>`
-    html += `</div>`
-  }
-
   let topLeftTitle = ""
   if(game.board) {
     topLeftTitle = "Scoreboard"
@@ -104,7 +95,16 @@ const render = () => {
   }
   html += `<div class="tl" onclick="ac();toggleScoreboard()">${topLeftTitle}</div>`
 
-  if (game.state == 'round') {
+  if(game.board) {
+    html += `<div class="tr">`
+    html += `<div class="button" onclick="ac();newGame()">New</div>`
+    html += `<div class="button" onclick="ac();addPlayer()">Add</div>`
+    html += `<div class="button" onclick="ac();removePlayer()">Remove</div>`
+    html += `<div class="button" onclick="ac();hardReset()">Reset</div>`
+    html += `</div>`
+
+    html += `<div class="bl" onclick="ac();toggleScoreboard()">Continue</div>`
+  } else if (game.state == 'round') {
     html += `<div class="bl" onclick="ac();endRound()">End Round</div>`
   } else if (allReady) {
     if(game.state == 'score') {
@@ -175,6 +175,8 @@ const endScore = () => {
   if(game.players.length > 4) {
     defaultBid = 2
   }
+
+  let roundIndex = 1
   for (playerIndex = 0; playerIndex < game.players.length; ++playerIndex) {
     let = p = game.players[playerIndex]
 
@@ -186,11 +188,18 @@ const endScore = () => {
     p.board.push(e)
     p.score = e.score
 
+    roundIndex = Math.max(roundIndex, p.board.length)
+
     p.ready = false
     p.bid = defaultBid
     p.tricks = p.bid
   }
   game.state = "bid"
+
+  if((game.players.length > 0) && ((roundIndex % game.players.length) == 0)) {
+    // Show off the scoreboard automatically after each person has a chance to deal
+    game.board = true
+  }
   render()
 }
 
