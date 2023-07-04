@@ -101,7 +101,8 @@ const render = () => {
       html += `<div class="button" onclick="ac();addPlayer()">Add</div> / `
       html += `<div class="button" onclick="ac();removePlayer()">Remove</div> / `
     }
-    html += `<div class="button" onclick="ac();newGame()">New Game</div>`
+    html += `<div class="button" onclick="ac();newGame()">New Game</div> / `
+    html += `<div class="button" onclick="ac();toggleFullscreen()">&#x21E7;</div>`
     // html += `<div class="button" onclick="ac();hardReset()">Reset</div>`
     html += `</div>`
 
@@ -334,6 +335,14 @@ const hardReset = () => {
   render()
 }
 
+const toggleFullscreen = () => {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen()
+  } else if (document.exitFullscreen) {
+    document.exitFullscreen()
+  }
+}
+
 const init = () => {
   mainElement = document.getElementById('main')
   window.newGame = newGame
@@ -348,6 +357,7 @@ const init = () => {
   window.endRound = endRound
   window.endScore = endScore
   window.toggleScoreboard = toggleScoreboard
+  window.toggleFullscreen = toggleFullscreen
 
   let loadedGame = localStorage.getItem("game")
   if(loadedGame) {
