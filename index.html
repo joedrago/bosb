@@ -6,15 +6,26 @@
 <link rel="manifest" href="manifest.webmanifest"/>
 <title>Blackout Scoreboard</title>
 <style>
+    @font-face {
+      font-family: 'ExtFont';
+      src: url('ext/font.ttf');
+    }
+
     html, body {
         color: #fff;
-        background-color: #030;
+        background-color: #222;
         user-select: none;
-        font-weight: 900;
+        font-family: ExtFont;
+        line-height: 1;
     }
 
     .toppad {
-        height: 10vh;
+        height: 12vh;
+    }
+
+    table {
+        border-spacing: 0px;
+        line-height: 1;
     }
 
     .col {
@@ -31,11 +42,12 @@
     }
 
     .player {
-        font-size: 8vh;
+        color: #cff;
+        font-size: 5vw;
     }
     .score {
-        font-size: 7vh;
-        padding-bottom: 5vh;
+        font-size: 4vw;
+        padding-bottom: 2vw;
         color: #ffa;
     }
 
@@ -44,17 +56,16 @@
         text-align: right;
     }
     .brow {
-        font-size: 5vh;
+        font-size: 3vw;
         text-align: right;
-        font-weight: 900;
     }
     .bplay {
     }
     .bdelta {
-        padding-left: 4vh;
+        padding-left: 3vw;
     }
     .bscore {
-        padding-left: 4vh;
+        padding-left: 3vw;
         color: #ffa;
     }
 
@@ -63,15 +74,16 @@
     }
 
     .bid {
-        font-size: 30vh;
+        font-size: 14vw;
     }
 
     .tricks {
-        font-size: 20vh;
+        font-size: 10vw;
+        padding-bottom: 1vw;
     }
 
     .bidb {
-        font-size: 10vh;
+        font-size: 5vw;
     }
 
     .tricksRight {
@@ -82,7 +94,7 @@
 
     .tl {
         position: fixed;
-        font-size: 5vh;
+        font-size: 3vw;
         padding: 2vh;
         left: 0px;
         top: 0px;
@@ -90,7 +102,7 @@
 
     .tr {
         position: fixed;
-        font-size: 5vh;
+        font-size: 3vw;
         padding: 2vh;
         right: 0px;
         top: 0px;
@@ -98,7 +110,7 @@
 
     .bl {
         position: fixed;
-        font-size: 5vh;
+        font-size: 3vw;
         padding: 2vh;
         left: 0px;
         bottom: 0px;
@@ -106,15 +118,13 @@
 
     .br {
         position: fixed;
-        font-size: 5vh;
+        font-size: 3vw;
         padding: 2vh;
         right: 0px;
         bottom: 0px;
     }
 
     .button {
-        font-size: 4vh;
-        font-weight: 300;
         font-style: italic;
         display: inline-block;
         padding: 5px;

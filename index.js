@@ -97,10 +97,12 @@ const render = () => {
 
   if(game.board) {
     html += `<div class="tr">`
-    html += `<div class="button" onclick="ac();newGame()">New</div>`
-    html += `<div class="button" onclick="ac();addPlayer()">Add</div>`
-    html += `<div class="button" onclick="ac();removePlayer()">Remove</div>`
-    html += `<div class="button" onclick="ac();hardReset()">Reset</div>`
+    if(!inGame()) {
+      html += `<div class="button" onclick="ac();addPlayer()">Add</div> / `
+      html += `<div class="button" onclick="ac();removePlayer()">Remove</div> / `
+    }
+    html += `<div class="button" onclick="ac();newGame()">New Game</div>`
+    // html += `<div class="button" onclick="ac();hardReset()">Reset</div>`
     html += `</div>`
 
     html += `<div class="bl" onclick="ac();toggleScoreboard()">Continue</div>`
