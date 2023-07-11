@@ -6,11 +6,32 @@ const save = () => {
   localStorage.setItem("game", JSON.stringify(game))
 }
 
+const bidsRemaining = (skipIndex = null) => {
+  let goalTricks = 13
+  if(game.players.length > 4) {
+    goalTricks = 10
+  }
+  let bidTotal = 0
+  for (let playerIndex = 0; playerIndex < game.players.length; ++playerIndex) {
+    if((skipIndex != null) && (skipIndex == playerIndex)) {
+      continue
+    }
+    let p = game.players[playerIndex]
+    bidTotal += p.bid
+  }
+
+  return (goalTricks - bidTotal)
+}
+
+const screwTheDealer = () => {
+  return (bidsRemaining() == 0)
+}
+
 const render = () => {
   let html = "<center><div class=\"toppad\">&nbsp;</div>"
   let allReady = true
   let roundNumber = 1
-  for (playerIndex = 0; playerIndex < game.players.length; ++playerIndex) {
+  for (let playerIndex = 0; playerIndex < game.players.length; ++playerIndex) {
     let p = game.players[playerIndex]
     if(!p.ready) {
       allReady = false
@@ -66,6 +87,12 @@ const render = () => {
       let otherClasses = ""
       if(!p.ready) {
         otherClasses += " notready"
+      }
+      if((game.dealer != null) && (playerIndex == game.dealer)) {
+        if(screwTheDealer()) {
+          otherClasses += " poordealer"
+          allReady = false
+        }
       }
       html += `
         <div class="bid${otherClasses}" onclick="ac();changeBid(${playerIndex}, 0)">${p.bid}</div>
@@ -139,6 +166,30 @@ const rename = (index) => {
   render()
 }
 
+const checkDealer = () => {
+  if(game.dealer != null) {
+    return
+  }
+
+  let dealerIndex = null
+  for (let playerIndex = 0; playerIndex < game.players.length; ++playerIndex) {
+    let p = game.players[playerIndex]
+    if(!p.ready) {
+      if(dealerIndex == null) {
+        dealerIndex = playerIndex
+      } else {
+        return // at least two people aren't ready
+      }
+    }
+  }
+
+  // A wild guess
+  console.log(`index ${dealerIndex} is dealer now`)
+  game.dealer = dealerIndex
+  game.players[dealerIndex].bid = Math.max(0, bidsRemaining(dealerIndex))
+  game.players[dealerIndex].ready = true
+}
+
 const changeBid = (index, amount) => {
   game.players[index].bid += amount
   if(game.players[index].bid < 0) {
@@ -146,6 +197,7 @@ const changeBid = (index, amount) => {
   }
   game.players[index].ready = true
   game.state = 'bid'
+  checkDealer()
   render()
 }
 
@@ -164,8 +216,8 @@ const endBid = () => {
 }
 
 const endRound = () => {
-  for (playerIndex = 0; playerIndex < game.players.length; ++playerIndex) {
-    let = p = game.players[playerIndex]
+  for (let playerIndex = 0; playerIndex < game.players.length; ++playerIndex) {
+    let p = game.players[playerIndex]
     p.ready = false
     p.tricks = p.bid
   }
@@ -180,7 +232,7 @@ const endScore = () => {
   }
 
   let roundIndex = 1
-  for (playerIndex = 0; playerIndex < game.players.length; ++playerIndex) {
+  for (let playerIndex = 0; playerIndex < game.players.length; ++playerIndex) {
     let = p = game.players[playerIndex]
 
     let e = {}
@@ -197,6 +249,7 @@ const endScore = () => {
     p.bid = defaultBid
     p.tricks = p.bid
   }
+  game.dealer = null
   game.state = "bid"
 
   if((game.players.length > 0) && ((roundIndex % game.players.length) == 0)) {
@@ -228,7 +281,7 @@ const inGame = () => {
     return false
   }
 
-  for (playerIndex = 0; playerIndex < game.players.length; ++playerIndex) {
+  for (let playerIndex = 0; playerIndex < game.players.length; ++playerIndex) {
     let = p = game.players[playerIndex]
     if(p.board.length > 0) {
       return true
@@ -251,7 +304,7 @@ const newGame = () => {
   if(game.players.length > 4) {
     defaultBid = 2
   }
-  for (playerIndex = 0; playerIndex < game.players.length; ++playerIndex) {
+  for (let playerIndex = 0; playerIndex < game.players.length; ++playerIndex) {
     let = p = game.players[playerIndex]
     p.ready = false
     p.bid = defaultBid
@@ -260,6 +313,7 @@ const newGame = () => {
     p.board = []
   }
   game.board = false
+  game.dealer = null
   game.state = 'bid'
   render()
 }
