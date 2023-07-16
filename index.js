@@ -44,9 +44,17 @@ const render = () => {
       extraCol += " scorecol"
     }
 
+    let extraPlayer = ""
+    if ((game.state == 'bid') && !game.board) {
+      let roundModulus = (roundNumber - 1) % game.players.length
+      if(roundModulus == playerIndex) {
+        extraPlayer = `<span class="dealerbutton">*</span>`
+      }
+    }
+
     html += `
       <div class="col${extraCol}">
-        <div class="player" onclick="ac();rename(${playerIndex})">${p.name}</div>
+        <div class="player" onclick="ac();rename(${playerIndex})">${p.name}${extraPlayer}</div>
         <div class="score">${p.score}</div>
       `
     if (game.board) {
@@ -167,10 +175,6 @@ const rename = (index) => {
 }
 
 const checkDealer = () => {
-  if(game.dealer != null) {
-    return
-  }
-
   let dealerIndex = null
   for (let playerIndex = 0; playerIndex < game.players.length; ++playerIndex) {
     let p = game.players[playerIndex]
@@ -183,11 +187,15 @@ const checkDealer = () => {
     }
   }
 
+  if(dealerIndex == null) {
+    return
+  }
+
   // A wild guess
   console.log(`index ${dealerIndex} is dealer now`)
   game.dealer = dealerIndex
   game.players[dealerIndex].bid = Math.max(0, bidsRemaining(dealerIndex))
-  game.players[dealerIndex].ready = true
+  // game.players[dealerIndex].ready = true
 }
 
 const changeBid = (index, amount) => {
