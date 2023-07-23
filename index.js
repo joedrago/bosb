@@ -246,8 +246,8 @@ const endScore = () => {
     let e = {}
     e.bid = p.bid
     e.tricks = p.tricks
-    e.delta = Math.abs(e.tricks - e.bid)
-    e.score = p.score + scoreFromDelta(e.delta)
+    e.delta = scoreFromDelta(Math.abs(e.tricks - e.bid))
+    e.score = p.score + e.delta
     p.board.push(e)
     p.score = e.score
 
